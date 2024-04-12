@@ -1,6 +1,6 @@
 # Telegram bot
 
-<!-- TODO: Описание бота -->
+Телеграмм бот способен по вашему желанию рассказать гороскоп на выбранные дни для любого знака зодиака. Также этот бот умеет делать расклады таро, но пока что эта функция находится в тестовом режиме :)
 
 ## Настройка окружения
 
@@ -40,3 +40,47 @@ horo-tgbot-cpp/build$ cmake ./..
 horo-tgbot-cpp/build$ make
 horo-tgbot-cpp/build$ ./bot-run $(< ./../token)
  ```
+
+## Документация по методам 
+
+Получение гороскопа через API в зависимости от знака (`sign`) на:
+* Вчерашний день
+* Сегодняшний день
+* Завтрашний день
+* Неделю
+* Месяц
+
+```cpp
+std::string GetDaily(std::string day, std::string sign);
+std::string GetMonthly(std::string sign);
+std::string GetWeekly(std::string sign);
+```
+
+Получение обновлений (новых сообщений), аргументы:
+* `offset` - начиная с какого обновления (номер) мы хотим получать
+* `timeout` - через какое время хотим получить (частота) 
+
+```cpp
+std::vector<Update> GetUpdates(std::optional<int64_t> offset = std::nullopt,
+                               std::optional<int64_t> timeout = std::nullopt);
+```
+
+Отправка сообщения, аргументы:
+* `chat_id` - идентификатор чата, в который мы отправляем сообщение
+* `text` - текст сообщения
+* `reply_to_message_id` - идентификатор сообщения, на которое мы отвечаем
+* `reply_markup` - набор маркап кнопок, пример "♎ Весы ♎"
+
+```cpp
+Message SendMessage(int64_t chat_id, std::optional<std::string> text = std::nullopt,
+                    std::optional<int64_t> reply_to_message_id = std::nullopt,
+                    std::optional<std::vector<std::string>> reply_markup = std::nullopt);
+```
+
+Отправка фото, аргументы:
+* `chat_id` - идентификатор чата, в который мы отправляем фото
+* `file` - относительынй путь до изображения, которые мы хотим отправить
+
+```cpp
+Message SendPhoto(int64_t chat_id, std::string file);
+```
